@@ -1,13 +1,16 @@
+#!/usr/bin/env python
+# coding=utf-8
+__author__ = 'pyphrb'
+from wtforms import Form, BooleanField, TextField, PasswordField, validators, StringField
 
-from app import db
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True)
-    email = db.Column(db.String(120), unique=True)
+from wtforms import Form, BooleanField, TextField, PasswordField, validators
 
-    def __init__(self, username, email):
-        self.username = username
-        self.email = email
-
-    def __repr__(self):
-        return '<User %r>' % self.username
+class RegistrationForm(Form):
+    username = StringField('Username', [validators.Length(min=4, max=25)])
+    email = StringField('Email Address', [validators.Length(min=6, max=35)])
+    password = PasswordField('New Password', [
+        validators.data_required(),
+        validators.EqualTo('confirm', message='Passwords must match')
+    ])
+    confirm = PasswordField('Repeat Password')
+    accept_tos = BooleanField('I accept the TOS', [validators.data_required()])
